@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — TrustFrame</title>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-shell">
+
+    <!-- ── Left: Brand ──────────────────────────────────────── -->
+    <div class="auth-brand" aria-hidden="true">
+      <div class="auth-brand-logo">
+        <img src="/images/logo.png" alt="TrustFrame">
+        <span class="auth-brand-name">TrustFrame</span>
+      </div>
+
+      <div class="auth-brand-content">
+        <h1 class="auth-brand-headline">
+          Collect<br>testimonials.<br>Grow with proof.
+        </h1>
+        <p class="auth-brand-sub">
+          Turn customer love into your most powerful marketing asset. 
+          Collect, curate and showcase social proof — beautifully.
+        </p>
+
+        <!-- Sample testimonial card -->
+        <div class="auth-quote-card">
+          <div class="auth-quote-stars">
+            <span class="auth-quote-star">★</span>
+            <span class="auth-quote-star">★</span>
+            <span class="auth-quote-star">★</span>
+            <span class="auth-quote-star">★</span>
+            <span class="auth-quote-star">★</span>
+          </div>
+          <p class="auth-quote-text">
+            "TrustFrame made it effortless to collect and showcase our customer reviews. 
+            Our conversion rate jumped 34% in the first month."
+          </p>
+          <div class="auth-quote-author">
+            <div class="auth-quote-avatar" aria-hidden="true">SA</div>
+            <div>
+              <div class="auth-quote-name">Sara Ahmadi</div>
+              <div class="auth-quote-role">Founder, Lumio Studio</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-brand-footer">© 2025 TrustFrame. All rights reserved.</div>
+    </div>
+
+    <!-- ── Right: Form ──────────────────────────────────────── -->
+    <div class="auth-form-panel">
+      <div class="auth-form-box">
+        <div class="auth-form-header">
+          <h2 class="auth-form-title">Welcome back</h2>
+          <p class="auth-form-sub">Sign in to your TrustFrame account.</p>
+        </div>
+
+        <!-- Email not verified panel -->
+        <div id="verify-blocked" class="hidden" style="background:var(--violet-xlight);border:1.5px solid rgba(124,58,237,0.25);border-radius:var(--radius-md);padding:var(--space-4);margin-bottom:var(--space-4)">
+          <p style="font-size:var(--text-sm);font-weight:600;color:var(--violet);margin-bottom:var(--space-2)">📧 Please verify your email first</p>
+          <p style="font-size:var(--text-xs);color:var(--muted);margin-bottom:var(--space-3)">Check your inbox for a verification link, or click below to resend it.</p>
+          <button type="button" id="btn-resend-from-login" class="btn btn-secondary btn-sm">Resend verification email</button>
+        </div>
+
+
+        <form id="form-login" class="auth-form" novalidate>
+          <!-- Alert -->
+          <div class="auth-alert auth-alert-error hidden" role="alert" aria-live="assertive"></div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="input"
+              placeholder="you@company.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <div class="flex justify-between items-center">
+              <label class="form-label" for="password">Password</label>
+              <a href="/forgot-password.html" class="text-xs" style="color:var(--violet)">Forgot password?</a>
+            </div>
+            <div class="input-password-wrap">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="input"
+                placeholder="Your password"
+                autocomplete="current-password"
+                required
+              >
+              <button
+                type="button"
+                class="input-password-toggle"
+                aria-label="Show password"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <span class="btn-text">Sign in</span>
+          </button>
+        </form>
+
+        <div class="auth-link mt-6">
+          Don't have an account? <a href="/signup.html">Create one free</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>

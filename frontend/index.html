@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TrustFrame — Collect testimonials, showcase trust, and grow with social proof. The premium testimonial collection platform.">
+  <title>TrustFrame — Testimonial & Social Proof Platform</title>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* ── Announcement Bar ────────────────────────────────── */
+    .top-announcement {
+      background: #4C1D95;
+      background: linear-gradient(90deg, #3B0764 0%, #5B21B6 50%, #7C3AED 100%);
+      color: #FFFFFF;
+      text-align: center;
+      padding: 0.5rem 1rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .top-announcement a {
+      color: #FFFFFF;
+      text-decoration: underline;
+      margin-left: 0.5rem;
+      font-weight: 700;
+    }
+    .top-announcement a:hover { color: #EDE9FE; }
+
+    /* ── Navigation ──────────────────────────────────────── */
+    .lp-nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      border-top: 3px solid var(--violet);
+      padding: var(--space-4) 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(124, 58, 237, 0.05);
+    }
+    .lp-nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .lp-logo { display: flex; align-items: center; gap: var(--space-3); }
+    .lp-logo-mark {
+      width: 34px; height: 34px;
+      background: var(--violet);
+      background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-family: var(--font-head); font-weight: 800; font-size: 15px;
+      box-shadow: 0 2px 10px rgba(124, 58, 237, 0.38);
+    }
+    .lp-logo-name { font-family: var(--font-head); font-weight: 800; color: var(--violet-dark); font-size: var(--text-lg); letter-spacing: -0.02em; }
+    .lp-nav-links { display: flex; align-items: center; gap: var(--space-6); }
+    .lp-nav-link { font-size: var(--text-sm); font-weight: 600; color: var(--muted); transition: color var(--transition); }
+    .lp-nav-link:hover { color: var(--violet); }
+
+    /* ── Hero ────────────────────────────────────────────── */
+    .hero {
+      padding: var(--space-20) 0 var(--space-16);
+      text-align: center;
+      background: radial-gradient(circle at 50% 10%, rgba(124, 58, 237, 0.10) 0%, rgba(245, 243, 255, 0.55) 50%, var(--white) 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Liquid blobs in hero background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -100px;
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, rgba(196,181,253,0.22) 0%, transparent 68%);
+      border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
+      animation: liquid-float 10s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -80px;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(167,139,250,0.16) 0%, transparent 70%);
+      border-radius: 45% 55% 60% 40% / 60% 40% 55% 45%;
+      animation: liquid-float 13s ease-in-out infinite reverse;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      background: var(--violet-xlight); color: var(--violet);
+      border: 1.5px solid rgba(124,58,237,0.25);
+      border-radius: var(--radius-full); padding: 0.4rem 1.15rem;
+      font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.04em;
+      margin-bottom: var(--space-6);
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.10);
+      position: relative; z-index: 1;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, var(--text-6xl));
+      font-weight: 800;
+      color: var(--black);
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+      max-width: 820px;
+      margin: 0 auto var(--space-6);
+      position: relative; z-index: 1;
+    }
+    .hero h1 span {
+      color: var(--violet);
+      background: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: var(--text-lg); color: var(--muted); max-width: 540px; margin: 0 auto var(--space-8); line-height: 1.7; position: relative; z-index: 1; }
+    .hero-ctas { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+
+    /* ── Trusted by ──────────────────────────────────────── */
+    .trusted-section {
+      padding: var(--space-10) 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--violet-xlight);
+    }
+    .trusted-label { text-align: center; font-size: var(--text-xs); font-weight: 700; color: var(--violet); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--space-5); }
+    .trusted-logos { display: flex; justify-content: center; align-items: center; gap: var(--space-10); flex-wrap: wrap; }
+    .trusted-logo { font-family: var(--font-head); font-weight: 800; font-size: var(--text-lg); color: #A1A1AA; letter-spacing: -0.03em; }
+
+    /* ── Features ────────────────────────────────────────── */
+    .features-section { padding: var(--space-20) 0; background: var(--white); }
+    .section-label {
+      display: inline-block;
+      font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--violet); background: var(--violet-light);
+      padding: 4px 14px; border-radius: var(--radius-full);
+      border: 1px solid rgba(124, 58, 237, 0.18);
+      margin-bottom: var(--space-3);
+    }
+    .section-title { font-family: var(--font-head); font-size: clamp(1.75rem, 4vw, var(--text-4xl)); font-weight: 800; color: var(--black); letter-spacing: -0.03em; margin-bottom: var(--space-4); max-width: 600px; }
+    .section-sub { font-size: var(--text-base); color: var(--muted); max-width: 480px; line-height: 1.7; }
+
+    .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); margin-top: var(--space-12); }
+    .feature-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-top: 4px solid var(--violet);
+      border-radius: var(--radius-lg); padding: var(--space-8);
+      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.05);
+    }
+    .feature-card:hover {
+      border-color: rgba(124, 58, 237, 0.40);
+      border-top-color: var(--violet);
+      box-shadow: 0 8px 28px rgba(124, 58, 237, 0.12);
+      transform: translateY(-3px);
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: var(--violet-light);
+      color: var(--violet);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem; margin-bottom: var(--space-4);
+    }
+    .feature-title { font-family: var(--font-head); font-size: var(--text-lg); font-weight: 700; color: var(--violet-dark); margin-bottom: var(--space-2); }
+    .feature-desc { font-size: var(--text-sm); color: var(--muted); line-height: 1.65; }
+
+    /* ── Stats ───────────────────────────────────────────── */
+    .stats-section { padding: var(--space-16) 0; background: var(--violet-xlight); border-top: 1px solid rgba(124, 58, 237, 0.12); border-bottom: 1px solid rgba(124, 58, 237, 0.12); }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); text-align: center; }
+    .big-stat { font-family: var(--font-head); font-size: clamp(2.5rem, 5vw, var(--text-5xl)); font-weight: 800; color: var(--violet); letter-spacing: -0.04em; }
+    .big-stat-label { font-size: var(--text-sm); font-weight: 600; color: var(--charcoal); margin-top: var(--space-2); }
+
+    /* ── Preview Wall ────────────────────────────────────── */
+    .wall-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); margin-top: var(--space-10); }
+    .preview-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-top: 3px solid rgba(124, 58, 237, 0.28);
+      border-radius: var(--radius-lg); padding: var(--space-6);
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.04);
+    }
+    .preview-stars { color: var(--gold); font-size: 0.95rem; margin-bottom: var(--space-3); }
+    .preview-text { font-size: var(--text-sm); color: var(--charcoal); line-height: 1.65; margin-bottom: var(--space-4); }
+    .preview-author { display: flex; align-items: center; gap: var(--space-3); }
+    .preview-av {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head); font-weight: 700; font-size: var(--text-xs); color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.28);
+    }
+    .preview-name { font-size: var(--text-sm); font-weight: 700; color: var(--black); }
+    .preview-role { font-size: var(--text-xs); color: var(--muted); }
+
+    /* ── Final CTA ───────────────────────────────────────── */
+    .cta-section { padding: var(--space-20) 0; text-align: center; }
+    .cta-card {
+      background: linear-gradient(135deg, #1E1030 0%, #4C1D95 45%, #6D28D9 75%, #5B21B6 100%);
+      border-radius: var(--radius-xl);
+      padding: var(--space-16) var(--space-8); max-width: 760px; margin: 0 auto;
+      position: relative; overflow: hidden;
+      box-shadow: 0 16px 56px rgba(124, 58, 237, 0.32);
+    }
+    .cta-card::before {
+      content: ''; position: absolute; top: -70px; right: -70px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(196,181,253,0.20) 0%, transparent 70%);
+      border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
+      animation: liquid-float 9s ease-in-out infinite;
+    }
+    .cta-card::after {
+      content: ''; position: absolute; bottom: -50px; left: -50px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(167,139,250,0.16) 0%, transparent 70%);
+      border-radius: 45% 55% 60% 40% / 60% 40% 55% 45%;
+      animation: liquid-float 12s ease-in-out infinite reverse;
+    }
+    .cta-card h2 { font-family: var(--font-head); font-size: clamp(1.75rem, 4vw, var(--text-4xl)); font-weight: 800; color: white; letter-spacing: -0.03em; margin-bottom: var(--space-4); position: relative; z-index: 1; }
+    .cta-card p { font-size: var(--text-base); color: rgba(255,255,255,0.85); margin-bottom: var(--space-8); position: relative; z-index: 1; }
+    .cta-card .btn-primary {
+      background: white; color: var(--violet);
+      border-color: white;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.20);
+      position: relative; z-index: 1;
+    }
+    .cta-card .btn-primary:hover { background: var(--violet-xlight); color: var(--violet-dark); }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    .footer {
+      padding: var(--space-10) 0;
+      background: #18181B;
+      border-top: 1px solid rgba(124, 58, 237, 0.20);
+      color: rgba(255, 255, 255, 0.75);
+    }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); }
+    .footer-copy { font-size: var(--text-xs); color: rgba(255, 255, 255, 0.55); }
+    .footer-links { display: flex; gap: var(--space-5); }
+    .footer-link { font-size: var(--text-xs); color: rgba(255, 255, 255, 0.70); transition: color var(--transition); }
+    .footer-link:hover { color: #FFFFFF; }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .features-grid, .wall-preview { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr; gap: var(--space-5); }
+      .lp-nav-links .lp-nav-link { display: none; }
+      .wall-preview > .preview-card:nth-child(n+2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Top Announcement ──────────────────────────────────── -->
+  <div class="top-announcement">
+    ✦ Collect authentic testimonials in under 60 seconds with TrustFrame
+    <a href="/signup.html">Get Started Free →</a>
+  </div>
+
+  <!-- ── Navigation ─────────────────────────────────────────── -->
+  <nav class="lp-nav">
+    <div class="container lp-nav-inner">
+      <div class="lp-logo">
+        <img src="/images/logo.png" alt="TrustFrame" style="width:34px;height:34px;object-fit:contain;border-radius:8px;">
+        <span class="lp-logo-name">TrustFrame</span>
+      </div>
+      <div class="lp-nav-links">
+        <a href="#features" class="lp-nav-link">Features</a>
+        <a href="#how-it-works" class="lp-nav-link">How it works</a>
+        <a href="/login.html" class="lp-nav-link">Sign in</a>
+        <a href="/signup.html" class="btn btn-primary btn-sm">Get started free</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ───────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span>✦</span> Turn customer love into social proof
+      </div>
+      <h1>
+        Collect testimonials.<br>
+        Showcase <span>trust</span>.<br>
+        Grow with proof.
+      </h1>
+      <p>
+        TrustFrame makes it effortless to collect, moderate and showcase 
+        authentic customer testimonials — without any technical setup.
+      </p>
+      <div class="hero-ctas">
+        <a href="/signup.html" class="btn btn-primary btn-lg">Start Collecting Free</a>
+        <a href="#how-it-works" class="btn btn-secondary btn-lg">See how it works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Trusted by ─────────────────────────────────────────── -->
+  <section class="trusted-section">
+    <div class="container">
+      <div class="trusted-label">Trusted by high-growth teams</div>
+      <div class="trusted-logos">
+        <span class="trusted-logo">Acme Corp</span>
+        <span class="trusted-logo">Lumio</span>
+        <span class="trusted-logo">Volta</span>
+        <span class="trusted-logo">Novatype</span>
+        <span class="trusted-logo">Celeron</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Features ───────────────────────────────────────────── -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything you need to build trust at scale</h2>
+      <p class="section-sub">One platform to collect, manage, and display social proof that actually converts.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">✉</div>
+          <h3 class="feature-title">Collect with a link</h3>
+          <p class="feature-desc">Share a branded collection link. Customers submit reviews without creating an account. No friction, more responses.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">✓</div>
+          <h3 class="feature-title">Moderate with confidence</h3>
+          <p class="feature-desc">Review every submission before it goes public. Approve, reject, feature, and archive — all from a clean inbox.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">❤</div>
+          <h3 class="feature-title">Wall of Love</h3>
+          <p class="feature-desc">Display your best reviews on a beautiful, shareable public page. Feature the testimonials that matter most.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">⬡</div>
+          <h3 class="feature-title">Embed anywhere</h3>
+          <p class="feature-desc">Add a testimonial widget to any website with a single iframe. Choose grid, carousel, or badge layouts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How it works ───────────────────────────────────────── -->
+  <section style="padding:var(--space-20) 0;background:var(--violet-xlight);border-top:1px solid var(--border)" id="how-it-works">
+    <div class="container">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">Up and running in minutes</h2>
+
+      <div class="grid grid-3 gap-8 mt-12" style="max-width:900px">
+        <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-head);font-weight:800;font-size:1rem;box-shadow:0 4px 12px rgba(124,58,237,0.32)">1</div>
+          <h3 style="font-family:var(--font-head);font-weight:700;font-size:var(--text-lg);color:var(--violet-dark)">Create a Space</h3>
+          <p class="text-sm text-muted" style="line-height:1.6">Set up a branded collection space with your name, prompt, and custom questions.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-head);font-weight:800;font-size:1rem;box-shadow:0 4px 12px rgba(124,58,237,0.32)">2</div>
+          <h3 style="font-family:var(--font-head);font-weight:700;font-size:var(--text-lg);color:var(--violet-dark)">Share your link</h3>
+          <p class="text-sm text-muted" style="line-height:1.6">Send your collection link to customers. They leave a review in under 60 seconds.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-head);font-weight:800;font-size:1rem;box-shadow:0 4px 12px rgba(124,58,237,0.32)">3</div>
+          <h3 style="font-family:var(--font-head);font-weight:700;font-size:var(--text-lg);color:var(--violet-dark)">Publish &amp; grow</h3>
+          <p class="text-sm text-muted" style="line-height:1.6">Approve your favorites and display them on your Wall of Love or embed them anywhere.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Preview Wall ────────────────────────────────────────── -->
+  <section style="padding:var(--space-20) 0;background:var(--white)">
+    <div class="container">
+      <div class="section-label">Wall of Love</div>
+      <h2 class="section-title">Beautiful testimonial walls, built automatically</h2>
+
+      <div class="wall-preview">
+        <div class="preview-card">
+          <div class="preview-stars">★★★★★</div>
+          <p class="preview-text">"The onboarding process was seamless. We had our first testimonials within 24 hours of signing up."</p>
+          <div class="preview-author"><div class="preview-av">JL</div><div><div class="preview-name">Jamie Lee</div><div class="preview-role">Head of Growth, Novatype</div></div></div>
+        </div>
+        <div class="preview-card" style="border: 2px solid var(--violet); border-top: 4px solid var(--violet); background:var(--violet-xlight); box-shadow: 0 8px 28px rgba(124,58,237,0.14)">
+          <div style="display:inline-block;font-size:10px;font-weight:700;background:var(--violet);color:white;padding:3px 10px;border-radius:9999px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-3)">⭐ Featured</div>
+          <div class="preview-stars">★★★★★</div>
+          <p class="preview-text">"TrustFrame transformed how we display social proof. Our landing page conversion went up 28%."</p>
+          <div class="preview-author"><div class="preview-av">SA</div><div><div class="preview-name">Sara Ahmadi</div><div class="preview-role">Founder, Lumio Studio</div></div></div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-stars">★★★★★</div>
+          <p class="preview-text">"Simple, elegant, and it just works. I've tried 4 other tools and TrustFrame is the one I'm staying with."</p>
+          <div class="preview-author"><div class="preview-av">MK</div><div><div class="preview-name">Marco Keita</div><div class="preview-role">CEO, Volta Agency</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats ──────────────────────────────────────────────── -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-row">
+        <div>
+          <div class="big-stat">4.9★</div>
+          <div class="big-stat-label">Average customer rating</div>
+        </div>
+        <div>
+          <div class="big-stat">10k+</div>
+          <div class="big-stat-label">Testimonials collected</div>
+        </div>
+        <div>
+          <div class="big-stat">2 min</div>
+          <div class="big-stat-label">Average setup time</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Final CTA ──────────────────────────────────────────── -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-card">
+        <h2>Start collecting social proof today.</h2>
+        <p>Create your first Space in minutes. No credit card required.</p>
+        <a href="/signup.html" class="btn btn-primary btn-lg">Get started free →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="lp-logo">
+        <img src="/images/logo.png" alt="TrustFrame" style="width:34px;height:34px;object-fit:contain;border-radius:8px;">
+        <span class="lp-logo-name" style="color:#FFFFFF">TrustFrame</span>
+      </div>
+      <div class="footer-copy">© 2025 TrustFrame. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="/login.html" class="footer-link">Login</a>
+        <a href="/signup.html" class="footer-link">Sign up</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

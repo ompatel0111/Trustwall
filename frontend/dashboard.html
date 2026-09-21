@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — TrustFrame</title>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    /* ── Dashboard-specific enhancements ─────────────────────────── */
+
+    /* Gradient greeting banner */
+    .dash-greeting-banner {
+      background: linear-gradient(135deg, #1E1030 0%, #2D1560 50%, #1E1030 100%);
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      margin-bottom: var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(109, 40, 217, 0.25);
+    }
+    .dash-greeting-banner::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .dash-greeting-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: 30%;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .dash-greeting-text { position: relative; z-index: 1; }
+    .dash-greeting-title {
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #FFFFFF;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+    .dash-greeting-sub {
+      font-size: var(--text-sm);
+      color: rgba(196,181,253,0.75);
+    }
+    .dash-greeting-actions {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-ghost-white {
+      background: rgba(255,255,255,0.10);
+      color: #FFFFFF;
+      border: 1px solid rgba(255,255,255,0.20);
+      backdrop-filter: blur(4px);
+    }
+    .btn-ghost-white:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.35);
+    }
+
+    /* ── Enhanced stat cards ─────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5) var(--space-5);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+    .stat-card-rating::before  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .stat-card-total::before   { background: linear-gradient(90deg, #7C3AED, #a78bfa); }
+    .stat-card-pending::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .stat-card-featured::before{ background: linear-gradient(90deg, #10b981, #34d399); }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(109,40,217,0.12); }
+
+    .stat-card-inner { display: flex; align-items: flex-start; justify-content: space-between; }
+    .stat-icon-wrap {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .stat-icon-rating  { background: #fef3c7; }
+    .stat-icon-total   { background: #ede9fe; }
+    .stat-icon-pending { background: #dbeafe; }
+    .stat-icon-featured{ background: #d1fae5; }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-2);
+    }
+    .stat-value {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--black);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .stat-sub {
+      font-size: var(--text-xs);
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    /* ── Quick action cards ──────────────────────────────────────── */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    .quick-action-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      text-decoration: none;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .quick-action-card:hover {
+      border-color: rgba(124,58,237,0.35);
+      box-shadow: 0 6px 20px rgba(124,58,237,0.12);
+      transform: translateY(-2px);
+    }
+    .qa-icon {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
+    }
+    .qa-icon-space    { background: linear-gradient(135deg,#ede9fe,#ddd6fe); }
+    .qa-icon-campaign { background: linear-gradient(135deg,#fce7f3,#fbcfe8); }
+    .qa-icon-embed    { background: linear-gradient(135deg,#d1fae5,#a7f3d0); }
+    .qa-title {
+      font-family: var(--font-head);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: 2px;
+    }
+    .qa-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .qa-arrow {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .quick-action-card:hover .qa-arrow { transform: translateX(3px); color: var(--violet); }
+
+    /* ── Recent testimonials card ────────────────────────────────── */
+    .dash-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      overflow: hidden;
+      margin-bottom: var(--space-6);
+    }
+    .dash-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--border);
+      background: var(--off-white);
+    }
+    .dash-card-title {
+      font-family: var(--font-head);
+      font-size: var(--text-md);
+      font-weight: 800;
+      color: var(--black);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .dash-card-title-icon {
+      width: 30px; height: 30px;
+      background: var(--violet-light);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+    }
+    .dash-card-body { padding: var(--space-2) 0; }
+
+    /* ── Activity feed ───────────────────────────────────────────── */
+    .activity-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    .activity-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+    .activity-card-header {
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--border);
+      background: var(--off-white);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .activity-card-title {
+      font-family: var(--font-head);
+      font-size: var(--text-sm);
+      font-weight: 800;
+      color: var(--black);
+    }
+    .activity-card-body { padding: var(--space-4) var(--space-5); }
+
+    .tip-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .tip-item:last-child { border-bottom: none; }
+    .tip-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .tip-dot-violet  { background: var(--violet); }
+    .tip-dot-blue    { background: #3b82f6; }
+    .tip-dot-green   { background: #10b981; }
+    .tip-dot-orange  { background: #f59e0b; }
+    .tip-text { font-size: var(--text-sm); color: var(--charcoal); line-height: 1.5; }
+    .tip-text strong { color: var(--black); }
+
+    .platform-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin: 3px;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .quick-actions { grid-template-columns: 1fr 1fr; }
+      .activity-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+      .quick-actions { grid-template-columns: 1fr; }
+      .dash-greeting-banner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- ── Sidebar ───────────────────────────────────────────── -->
+    <aside id="sidebar" class="sidebar" role="navigation" aria-label="Main navigation">
+      <div class="sidebar-logo">
+        <img src="/images/logo.png" alt="TrustFrame" style="width:34px;height:34px;object-fit:contain;border-radius:8px;">
+        <span class="sidebar-logo-name"><span class="brand-trust">Trust</span><span class="brand-frame">Frame</span></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html" class="nav-link active" aria-current="page">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Overview
+        </a>
+        <a href="/spaces.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Spaces
+        </a>
+        <a href="/testimonials.html" class="nav-link" id="nav-testimonials">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Testimonials
+        </a>
+        <a href="/analytics.html" class="nav-link" id="nav-analytics">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Analytics
+        </a>
+        <a href="/campaigns.html" class="nav-link" id="nav-campaigns">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Campaigns
+        </a>
+        <a href="/embed.html" class="nav-link" id="nav-embed">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Embed
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" id="sidebar-user-btn" role="button" tabindex="0" aria-label="Account menu">
+          <div id="sidebar-avatar" class="avatar avatar-sm" aria-hidden="true">…</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+            <div class="sidebar-user-email" id="sidebar-user-email"></div>
+          </div>
+        </div>
+        <button id="btn-logout" class="btn btn-ghost btn-sm w-full mt-2" style="justify-content:flex-start;color:var(--muted)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- ── Main content ──────────────────────────────────────── -->
+    <div class="main-content">
+
+      <!-- Mobile header -->
+      <header class="mobile-header">
+        <button id="hamburger" class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <span style="font-family:var(--font-head);font-weight:800;font-size:1rem"><span style="color:#FFFFFF">Trust</span><span style="color:#a78bfa">Frame</span></span>
+        <div style="width:36px"></div>
+      </header>
+
+      <!-- Desktop page header -->
+      <div class="page-header">
+        <div>
+          <h1 id="greeting" class="page-title">Good evening</h1>
+          <p class="text-sm text-muted mt-2">Here's a summary of your account activity.</p>
+        </div>
+        <div style="display:flex;gap:var(--space-3)">
+          <a href="/spaces.html" class="btn btn-primary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Space
+          </a>
+          <a href="/campaigns.html" class="btn btn-secondary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            New Campaign
+          </a>
+        </div>
+      </div>
+
+      <main class="page-body">
+
+        <!-- Greeting Banner -->
+        <div class="dash-greeting-banner">
+          <div class="dash-greeting-text">
+            <div class="dash-greeting-title" id="greeting-banner">Welcome back! 👋</div>
+            <div class="dash-greeting-sub">Your trust-building dashboard is ready. Here's what's happening.</div>
+          </div>
+          <div class="dash-greeting-actions">
+            <a href="/spaces.html" class="btn btn-sm btn-ghost-white">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Create Space
+            </a>
+            <a href="/testimonials.html" class="btn btn-sm" style="background:rgba(255,255,255,0.95);color:var(--violet);font-weight:700">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              View Reviews
+            </a>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-card stat-card-rating">
+            <div class="stat-card-inner">
+              <div>
+                <div class="stat-label">⭐ Average Rating</div>
+                <div class="stat-value" id="stat-avg"><div class="skeleton skeleton-text" style="width:60px;height:1.8em"></div></div>
+                <div class="stat-sub">across all reviews</div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-rating">⭐</div>
+            </div>
+          </div>
+          <div class="stat-card stat-card-total">
+            <div class="stat-card-inner">
+              <div>
+                <div class="stat-label">💬 Total Reviews</div>
+                <div class="stat-value" id="stat-total"><div class="skeleton skeleton-text" style="width:40px;height:1.8em"></div></div>
+                <div class="stat-sub">approved testimonials</div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-total">💬</div>
+            </div>
+          </div>
+          <div class="stat-card stat-card-pending">
+            <div class="stat-card-inner">
+              <div>
+                <div class="stat-label">🕐 Pending Reviews</div>
+                <div class="stat-value" id="stat-pending"><div class="skeleton skeleton-text" style="width:40px;height:1.8em"></div></div>
+                <div class="stat-sub">awaiting moderation</div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-pending">🕐</div>
+            </div>
+          </div>
+          <div class="stat-card stat-card-featured">
+            <div class="stat-card-inner">
+              <div>
+                <div class="stat-label">📌 Featured</div>
+                <div class="stat-value" id="stat-featured"><div class="skeleton skeleton-text" style="width:40px;height:1.8em"></div></div>
+                <div class="stat-sub">pinned testimonials</div>
+              </div>
+              <div class="stat-icon-wrap stat-icon-featured">📌</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <a href="/spaces.html" class="quick-action-card">
+            <div class="qa-icon qa-icon-space">🏠</div>
+            <div>
+              <div class="qa-title">Create a Space</div>
+              <div class="qa-desc">Set up a branded review collection page</div>
+            </div>
+            <div class="qa-arrow">→</div>
+          </a>
+          <a href="/campaigns.html" class="quick-action-card">
+            <div class="qa-icon qa-icon-campaign">📣</div>
+            <div>
+              <div class="qa-title">Start a Campaign</div>
+              <div class="qa-desc">Email customers and request reviews</div>
+            </div>
+            <div class="qa-arrow">→</div>
+          </a>
+          <a href="/embed.html" class="quick-action-card">
+            <div class="qa-icon qa-icon-embed">🔗</div>
+            <div>
+              <div class="qa-title">Embed Reviews</div>
+              <div class="qa-desc">Add your Wall of Love to any website</div>
+            </div>
+            <div class="qa-arrow">→</div>
+          </a>
+        </div>
+
+        <!-- Recent Pending + Tips side by side -->
+        <div class="activity-grid">
+
+          <!-- Recent Testimonials -->
+          <div class="activity-card">
+            <div class="activity-card-header">
+              <span style="font-size:1rem">💬</span>
+              <span class="activity-card-title">Recent Pending Reviews</span>
+              <a href="/testimonials.html" class="text-xs" style="color:var(--violet);font-weight:600;margin-left:auto">View all →</a>
+            </div>
+            <div class="activity-card-body" id="recent-testimonials">
+              <!-- Skeleton -->
+              <div class="testimonial-item">
+                <div class="skeleton skeleton-avatar avatar-md"></div>
+                <div class="testimonial-meta flex-1" style="display:flex;flex-direction:column;gap:8px">
+                  <div class="skeleton skeleton-text" style="width:35%"></div>
+                  <div class="skeleton skeleton-text" style="width:20%"></div>
+                  <div class="skeleton skeleton-text" style="width:75%"></div>
+                </div>
+              </div>
+              <div class="testimonial-item">
+                <div class="skeleton skeleton-avatar avatar-md"></div>
+                <div class="testimonial-meta flex-1" style="display:flex;flex-direction:column;gap:8px">
+                  <div class="skeleton skeleton-text" style="width:40%"></div>
+                  <div class="skeleton skeleton-text" style="width:25%"></div>
+                  <div class="skeleton skeleton-text" style="width:80%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips & Platform -->
+          <div class="activity-card">
+            <div class="activity-card-header">
+              <span style="font-size:1rem">💡</span>
+              <span class="activity-card-title">Tips to Grow Faster</span>
+            </div>
+            <div class="activity-card-body">
+              <div class="tip-item">
+                <div class="tip-dot tip-dot-violet"></div>
+                <div class="tip-text"><strong>Send campaigns after purchase</strong> — the best time to ask for a review is within 48 hours of delivery.</div>
+              </div>
+              <div class="tip-item">
+                <div class="tip-dot tip-dot-blue"></div>
+                <div class="tip-text"><strong>Embed your Wall of Love</strong> on your homepage to increase conversions by up to 28%.</div>
+              </div>
+              <div class="tip-item">
+                <div class="tip-dot tip-dot-green"></div>
+                <div class="tip-text"><strong>Feature your best reviews</strong> — pin 3–5 star testimonials to always display them prominently.</div>
+              </div>
+              <div class="tip-item">
+                <div class="tip-dot tip-dot-orange"></div>
+                <div class="tip-text"><strong>Use {name} in messages</strong> — personalised emails get 2× higher open rates.</div>
+              </div>
+              <div style="margin-top:var(--space-4)">
+                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:var(--space-2)">Works great with</div>
+                <div style="display:flex;flex-wrap:wrap">
+                  <span class="platform-pill">🛍️ Shopify</span>
+                  <span class="platform-pill">⚡ WooCommerce</span>
+                  <span class="platform-pill">🔷 Webflow</span>
+                  <span class="platform-pill">▲ Next.js</span>
+                  <span class="platform-pill">🌐 Any website</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div><!-- /main-content -->
+  </div><!-- /app-shell -->
+
+  <div id="toast-container" aria-live="polite"></div>
+  <script type="module" src="js/dashboard.js"></script>
+  <script>
+    // Update greeting banner with user's first name (set by dashboard.js)
+    const origRenderGreeting = window.__dashGreetingHook;
+    document.addEventListener('DOMContentLoaded', () => {});
+  </script>
+</body>
+</html>

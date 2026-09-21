@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collect a Testimonial — TrustFrame</title>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="stylesheet" href="css/collection.css">
+</head>
+<body>
+  <div class="collect-shell">
+
+    <!-- Header -->
+    <header class="collect-header">
+      <div class="collect-logo" id="collect-logo" aria-hidden="true">…</div>
+      <span class="collect-brand-name" id="collect-brand-name">Loading…</span>
+    </header>
+
+    <!-- Body -->
+    <div class="collect-body">
+      <div class="collect-container">
+
+        <!-- Form Card (Left Column) -->
+        <div class="collect-card">
+          <!-- Form area -->
+          <div id="collect-form-area">
+            <div class="collect-prompt-label">Share your experience</div>
+            <h1 class="collect-prompt" id="collect-prompt">Loading…</h1>
+
+            <form id="form-collect" class="collect-form" novalidate>
+
+              <!-- Star rating -->
+              <div class="collect-rating form-group" id="rating-section">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <label class="form-label" style="margin:0">Your overall rating</label>
+                  <span id="rating-label" class="badge badge-default" style="font-size:12px;color:var(--violet);font-weight:600">Select rating</span>
+                </div>
+                <div class="collect-rating-stars" id="rating-stars" role="group" aria-label="Star rating selector">
+                  <button type="button" class="star-btn" data-value="1" aria-label="1 star" aria-pressed="false">★</button>
+                  <button type="button" class="star-btn" data-value="2" aria-label="2 stars" aria-pressed="false">★</button>
+                  <button type="button" class="star-btn" data-value="3" aria-label="3 stars" aria-pressed="false">★</button>
+                  <button type="button" class="star-btn" data-value="4" aria-label="4 stars" aria-pressed="false">★</button>
+                  <button type="button" class="star-btn" data-value="5" aria-label="5 stars" aria-pressed="false">★</button>
+                </div>
+                <span id="error-rating" class="form-error hidden" role="alert"></span>
+              </div>
+
+              <!-- Praise Tag Chips -->
+              <div class="form-group">
+                <label class="form-label">What stood out most? <span class="text-muted" style="font-weight:400">(select all that apply)</span></label>
+                <div class="tag-chips-wrap" id="tag-chips">
+                  <button type="button" class="tag-chip" data-tag="⚡ Super Fast">⚡ Super Fast</button>
+                  <button type="button" class="tag-chip" data-tag="✨ Easy to Use">✨ Easy to Use</button>
+                  <button type="button" class="tag-chip" data-tag="💬 Stellar Support">💬 Stellar Support</button>
+                  <button type="button" class="tag-chip" data-tag="🚀 High Value">🚀 High Value</button>
+                  <button type="button" class="tag-chip" data-tag="💡 Innovative">💡 Innovative</button>
+                  <button type="button" class="tag-chip" data-tag="🎯 Highly Recommended">🎯 Highly Recommended</button>
+                </div>
+              </div>
+
+              <!-- Headline -->
+              <div class="form-group">
+                <label class="form-label" for="headline">Review headline <span class="text-muted" style="font-weight:400">(optional)</span></label>
+                <input type="text" id="headline" name="headline" class="input" placeholder="e.g. A game-changer for our team workflow!" maxlength="120">
+              </div>
+
+              <!-- Review -->
+              <div class="form-group">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <label class="form-label" for="review" style="margin:0">Your review <span aria-hidden="true" style="color:var(--error)">*</span></label>
+                  <span id="char-counter" class="text-xs text-muted">0 / 2,000</span>
+                </div>
+                <textarea id="review" name="review" class="input" placeholder="Tell us about your experience, results achieved, or what you liked most…" rows="4" required minlength="10" maxlength="2000"></textarea>
+                <span id="error-review" class="form-error hidden" role="alert"></span>
+              </div>
+
+              <!-- Name & Email -->
+              <div class="collect-row">
+                <div class="form-group">
+                  <label class="form-label" for="name">Your name <span aria-hidden="true" style="color:var(--error)">*</span></label>
+                  <input type="text" id="name" name="name" class="input" placeholder="Jane Smith" required autocomplete="name">
+                  <span id="error-name" class="form-error hidden" role="alert"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email">Email <span aria-hidden="true" style="color:var(--error)">*</span></label>
+                  <input type="email" id="email" name="email" class="input" placeholder="jane@example.com" required autocomplete="email">
+                  <span id="error-email" class="form-error hidden" role="alert"></span>
+                </div>
+              </div>
+
+              <!-- Role & Social link -->
+              <div class="collect-row">
+                <div class="form-group">
+                  <label class="form-label" for="company_role">Your role / company <span class="text-muted" style="font-weight:400">(optional)</span></label>
+                  <input type="text" id="company_role" name="company_role" class="input" placeholder="e.g. Product Lead at Acme" autocomplete="organization-title">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="social_link">Website / LinkedIn / X <span class="text-muted" style="font-weight:400">(optional)</span></label>
+                  <input type="url" id="social_link" name="social_link" class="input" placeholder="https://linkedin.com/in/username">
+                </div>
+              </div>
+
+              <!-- Custom questions (injected by JS) -->
+              <div id="custom-questions"></div>
+
+              <!-- Consent checkbox -->
+              <label class="consent-row">
+                <input type="checkbox" id="consent-check" name="consent" checked required>
+                <span>I give permission to showcase this review, my name, and details on public websites and marketing materials.</span>
+              </label>
+
+              <button type="submit" class="btn btn-primary mt-4">
+                <span class="btn-text">Submit testimonial →</span>
+              </button>
+
+            </form>
+          </div>
+
+          <!-- Success state (hidden initially) -->
+          <div id="collect-success" class="collect-success hidden">
+            <div class="collect-success-icon" aria-hidden="true">✓</div>
+            <h2 class="collect-success-title">Thank you!</h2>
+            <p class="collect-success-sub">
+              Your testimonial has been submitted and is pending review.
+              We truly appreciate you taking the time to share your feedback!
+            </p>
+            <div id="success-preview-wrap" class="mt-6" style="text-align:left"></div>
+          </div>
+        </div>
+
+        <!-- Live Preview Card (Right Column) -->
+        <aside class="preview-container" aria-label="Testimonial live preview">
+          <div class="preview-badge-label">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10B981"></span>
+            Live Preview
+          </div>
+          <div class="live-preview-card">
+            <div class="preview-stars" id="preview-stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <div class="preview-headline" id="preview-headline">"Headline will appear here…"</div>
+            <div class="preview-body" id="preview-body">Your review text will preview here in real time as you type…</div>
+            <div class="preview-tags" id="preview-tags"></div>
+            <div class="divider" style="margin:16px 0 12px"></div>
+            <div class="preview-header">
+              <div class="avatar avatar-md" id="preview-avatar">JS</div>
+              <div>
+                <div class="preview-author-name" id="preview-name">Jane Smith</div>
+                <div class="preview-author-meta" id="preview-role">Role / Company</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="collect-footer">
+      Powered by <a href="/" target="_blank">TrustFrame</a>
+    </footer>
+
+  </div>
+
+  <script type="module" src="js/collection.js"></script>
+</body>
+</html>

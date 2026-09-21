@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create account — TrustFrame</title>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-shell">
+
+    <!-- ── Left: Brand ──────────────────────────────────────── -->
+    <div class="auth-brand" aria-hidden="true">
+      <div class="auth-brand-logo">
+        <img src="/images/logo.png" alt="TrustFrame">
+        <span class="auth-brand-name">TrustFrame</span>
+      </div>
+      <div class="auth-brand-content">
+        <h1 class="auth-brand-headline">
+          Start collecting<br>social proof<br>today.
+        </h1>
+        <p class="auth-brand-sub">
+          Create your first Space in under two minutes.
+          Share your link, collect reviews, and build trust — all in one place.
+        </p>
+        <div class="auth-quote-card">
+          <div class="auth-quote-stars">
+            <span class="auth-quote-star">★</span><span class="auth-quote-star">★</span>
+            <span class="auth-quote-star">★</span><span class="auth-quote-star">★</span>
+            <span class="auth-quote-star">★</span>
+          </div>
+          <p class="auth-quote-text">
+            "We started using TrustFrame on a Monday and had 20 testimonials by Friday.
+            The setup was literally 5 minutes."
+          </p>
+          <div class="auth-quote-author">
+            <div class="auth-quote-avatar" aria-hidden="true">MK</div>
+            <div>
+              <div class="auth-quote-name">Marco Keita</div>
+              <div class="auth-quote-role">CEO, Volta Agency</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-brand-footer">© 2025 TrustFrame. All rights reserved.</div>
+    </div>
+
+    <!-- ── Right panel ──────────────────────────────────────── -->
+    <div class="auth-form-panel">
+      <div class="auth-form-box">
+
+        <!-- ══════════════════════════════════════════════════
+             SECTION 1: Signup form
+             Toggled by JS: form-signup-wrap hidden → signup-verify-state shown
+             ══════════════════════════════════════════════════ -->
+        <div id="form-signup-wrap">
+          <div class="auth-form-header">
+            <h2 class="auth-form-title">Create your account</h2>
+            <p class="auth-form-sub">Free to start. No credit card required.</p>
+          </div>
+
+          <form id="form-signup" class="auth-form" novalidate autocomplete="off">
+            <div class="auth-alert auth-alert-error hidden" role="alert" aria-live="assertive"></div>
+
+            <div class="form-group">
+              <label class="form-label" for="name">Full name</label>
+              <input type="text" id="name" name="name" class="input"
+                     placeholder="Jane Smith" autocomplete="name" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="email">Email address</label>
+              <input type="email" id="email" name="email" class="input"
+                     placeholder="you@company.com" autocomplete="email" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="password">Password</label>
+              <div class="input-password-wrap">
+                <input type="password" id="password" name="password" class="input"
+                       placeholder="At least 8 characters"
+                       autocomplete="new-password" required minlength="8">
+                <button type="button" class="input-password-toggle" aria-label="Show password">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              <span class="btn-text">Create account</span>
+            </button>
+          </form>
+
+          <div class="auth-link mt-4">
+            Already have an account? <a href="/login.html">Sign in</a>
+          </div>
+        </div><!-- /#form-signup-wrap -->
+
+
+        <!-- ══════════════════════════════════════════════════
+             SECTION 2: Email verification state
+             Hidden by default. Shown only after a successful API signup call.
+             ══════════════════════════════════════════════════ -->
+        <div id="signup-verify-state" class="hidden" aria-live="polite" style="text-align:center;padding:2rem 0">
+          <div style="width:72px;height:72px;background:var(--violet-light);border-radius:50%;
+                      display:flex;align-items:center;justify-content:center;
+                      margin:0 auto 1.25rem;font-size:2.4rem">📧</div>
+          <h2 style="font-family:var(--font-head);font-size:var(--text-xl);font-weight:800;
+                     color:var(--black);margin-bottom:0.75rem">Check your email!</h2>
+          <p style="font-size:var(--text-sm);color:var(--muted);line-height:1.7;
+                    max-width:320px;margin:0 auto 1.5rem">
+            We sent a verification email to<br>
+            <strong class="verify-email-display" style="color:var(--black);word-break:break-all"></strong>.<br>
+            Open your Gmail or email app and click the link to activate your account.
+          </p>
+          <p style="font-size:var(--text-xs);color:var(--muted)">
+            Didn't receive it? Check spam or&nbsp;
+            <button type="button" id="btn-resend-verify" class="btn btn-secondary btn-sm" style="display:inline-block">Resend email</button>
+          </p>
+          <div class="auth-link mt-5">
+            Already verified? <a href="/login.html">Sign in →</a>
+          </div>
+        </div><!-- /#signup-verify-state -->
+
+
+      </div><!-- /.auth-form-box -->
+    </div><!-- /.auth-form-panel -->
+
+  </div><!-- /.auth-shell -->
+
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verifying your email — TrustFrame</title>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="stylesheet" href="css/auth.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--off-white);
+      padding: var(--space-5);
+    }
+    .verify-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border-top: 4px solid var(--violet);
+      box-shadow: 0 12px 48px rgba(124,58,237,0.12);
+      padding: 3rem 2.5rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .verify-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2.4rem;
+    }
+    .verify-icon.loading  { background: var(--violet-light); animation: pulse 1.4s ease-in-out infinite; }
+    .verify-icon.success  { background: #D1FAE5; }
+    .verify-icon.error    { background: #FEE2E2; }
+    .verify-title { font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; color: var(--black); margin-bottom: 0.75rem; }
+    .verify-desc  { font-size: 0.9rem; color: var(--muted); line-height: 1.65; margin-bottom: 1.5rem; }
+    .progress-bar {
+      height: 4px;
+      background: var(--violet-light);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--violet);
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .redirect-text { font-size: 0.78rem; color: var(--muted); margin-top: 0.5rem; }
+    .brand-footer {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .brand-mark {
+      width: 24px; height: 24px;
+      background: var(--violet);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-family: var(--font-head); font-weight: 800; font-size: 12px;
+    }
+    .brand-name { font-family: var(--font-head); font-weight: 800; color: var(--violet-dark); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+  </style>
+</head>
+<body>
+  <div class="verify-card">
+
+    <!-- Loading state -->
+    <div id="state-loading">
+      <div class="verify-icon loading">⏳</div>
+      <p class="verify-title">Verifying your email…</p>
+      <p class="verify-desc">Please wait a moment.</p>
+    </div>
+
+    <!-- Success state -->
+    <div id="state-success" style="display:none">
+      <div class="verify-icon success">✅</div>
+      <p class="verify-title">Email verified!</p>
+      <p class="verify-desc">
+        Your account is now active. You're being logged in and redirected to your dashboard…
+      </p>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <p class="redirect-text" id="redirect-countdown">Redirecting in 3 seconds…</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="state-error" style="display:none">
+      <div class="verify-icon error">❌</div>
+      <p class="verify-title">Verification failed</p>
+      <p class="verify-desc" id="error-message">
+        The link may have expired or already been used. Please request a new one.
+      </p>
+      <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
+        <a href="/signup.html" class="btn btn-secondary btn-sm">Back to signup</a>
+        <a href="/login.html" class="btn btn-primary btn-sm">Try logging in</a>
+      </div>
+    </div>
+
+    <div class="brand-footer">
+      <img src="/images/logo.png" alt="TrustFrame" style="width:24px;height:24px;object-fit:contain;border-radius:6px;">
+      <span class="brand-name">TrustFrame</span>
+    </div>
+  </div>
+
+  <script>
+    // ── Grab token from URL ────────────────────────────────────────────────────
+    const token = new URLSearchParams(window.location.search).get('token');
+
+    const stateLoading = document.getElementById('state-loading');
+    const stateSuccess = document.getElementById('state-success');
+    const stateError   = document.getElementById('state-error');
+    const errorMsg     = document.getElementById('error-message');
+    const progressFill = document.getElementById('progress-fill');
+    const countdown    = document.getElementById('redirect-countdown');
+
+    function showError(msg) {
+      stateLoading.style.display = 'none';
+      stateError.style.display   = 'block';
+      if (msg) errorMsg.textContent = msg;
+    }
+
+    function showSuccess() {
+      stateLoading.style.display = 'none';
+      stateSuccess.style.display = 'block';
+
+      // Animate progress bar and countdown → redirect to dashboard
+      let seconds = 3;
+      countdown.textContent = `Redirecting in ${seconds} second${seconds !== 1 ? 's' : ''}…`;
+      progressFill.style.width = '0%';
+
+      // Grow bar over 3 seconds
+      const interval = setInterval(() => {
+        seconds--;
+        const pct = Math.round(((3 - seconds) / 3) * 100);
+        progressFill.style.width = pct + '%';
+
+        if (seconds <= 0) {
+          clearInterval(interval);
+          countdown.textContent = 'Redirecting…';
+          window.location.replace('/dashboard.html');
+        } else {
+          countdown.textContent = `Redirecting in ${seconds} second${seconds !== 1 ? 's' : ''}…`;
+        }
+      }, 1000);
+    }
+
+    // ── Call verify endpoint ───────────────────────────────────────────────────
+    if (!token) {
+      showError('No verification token found in the URL. Please check the link in your email.');
+    } else {
+      fetch(`/api/auth/verify-email?token=${encodeURIComponent(token)}`, {
+        method: 'GET',
+        credentials: 'include',   // allows the server to SET cookies on this response
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showSuccess();
+        } else {
+          showError(data.message || 'Verification failed.');
+        }
+      })
+      .catch(() => showError('Network error. Please check your internet connection and try again.'));
+    }
+  </script>
+</body>
+</html>

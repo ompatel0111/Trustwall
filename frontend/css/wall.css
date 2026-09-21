@@ -1,0 +1,229 @@
+﻿/* ============================================================
+   Wall of Love — Liquid Light Purple Theme
+   ============================================================ */
+@import url('main.css');
+
+.wall-shell {
+  min-height: 100vh;
+  background: var(--off-white);
+}
+
+/* ── Wall Header — Liquid Violet Hero ─────────────────────────── */
+.wall-header {
+  background: #1E1030;
+  background: linear-gradient(135deg, #1E1030 0%, #4C1D95 50%, #5B21B6 80%, #7C3AED 100%);
+  border-bottom: 1px solid rgba(196, 181, 253, 0.12);
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+  color: #FFFFFF;
+  box-shadow: 0 6px 32px rgba(124, 58, 237, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Liquid blob in header background */
+.wall-header::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: 10%;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(196, 181, 253, 0.20) 0%, transparent 70%);
+  border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
+  animation: liquid-float 9s ease-in-out infinite;
+  pointer-events: none;
+}
+.wall-header::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: 8%;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.18) 0%, transparent 70%);
+  border-radius: 45% 55% 60% 40% / 60% 40% 55% 45%;
+  animation: liquid-float 12s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+
+.wall-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-weight: 800;
+  color: #FFFFFF;
+  font-size: var(--text-xl);
+  margin: 0 auto var(--space-5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.20);
+  position: relative;
+  z-index: 1;
+}
+
+.wall-title {
+  font-family: var(--font-head);
+  font-size: clamp(2rem, 5vw, var(--text-5xl));
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-3);
+  position: relative;
+  z-index: 1;
+}
+
+.wall-subtitle {
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Stats bar ───────────────────────────────────────────────── */
+.wall-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-10);
+  padding: var(--space-5) var(--space-6);
+  background: var(--violet-xlight);
+  border-bottom: 2px solid rgba(124, 58, 237, 0.12);
+}
+.wall-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.wall-stat-val {
+  font-family: var(--font-head);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--violet);
+}
+.wall-stat-lbl {
+  font-size: var(--text-xs);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+/* ── Masonry Grid ────────────────────────────────────────────── */
+.wall-masonry {
+  columns: 3;
+  column-gap: var(--space-5);
+  padding: var(--space-10) var(--space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.wall-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 3px solid rgba(124, 58, 237, 0.30);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-bottom: var(--space-5);
+  break-inside: avoid;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.04);
+}
+.wall-card:hover {
+  border-color: rgba(124, 58, 237, 0.35);
+  border-top-color: var(--violet);
+  box-shadow: 0 8px 28px rgba(124, 58, 237, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Featured card */
+.wall-card.featured {
+  border: 2px solid var(--violet);
+  border-top: 4px solid var(--violet);
+  background: var(--violet-xlight);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.12);
+}
+
+.wall-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.wall-card-info { flex: 1; min-width: 0; }
+.wall-card-name {
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wall-card-role {
+  font-size: var(--text-xs);
+  color: var(--muted);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wall-card-stars { display: flex; gap: 2px; }
+.wall-card-star  { font-size: 0.95rem; }
+.wall-card-star.filled { color: var(--gold); }
+.wall-card-star.empty  { color: var(--border-dark); }
+
+.wall-card-review {
+  font-size: var(--text-sm);
+  color: var(--charcoal);
+  line-height: 1.65;
+}
+
+.wall-card-featured-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--violet);
+  color: #FFFFFF;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  width: fit-content;
+}
+
+/* ── Wall Footer ─────────────────────────────────────────────── */
+.wall-footer {
+  text-align: center;
+  padding: var(--space-8) var(--space-6);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+.wall-footer a { color: var(--violet); font-weight: 600; }
+.wall-footer a:hover { color: var(--violet-dark); }
+
+/* ── Empty state ─────────────────────────────────────────────── */
+.wall-empty { text-align: center; padding: var(--space-20) var(--space-6); }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1024px) { .wall-masonry { columns: 2; } }
+@media (max-width: 640px) {
+  .wall-masonry  { columns: 1; padding: var(--space-5) var(--space-4); }
+  .wall-header   { padding: var(--space-8) var(--space-5); }
+  .wall-title    { font-size: var(--text-3xl); }
+  .wall-stats    { gap: var(--space-5); }
+}

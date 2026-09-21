@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campaigns — TrustFrame</title>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    /* ── Campaigns page specific styles ───────────────────────── */
+    .campaigns-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Stats Grid ─────────────────────────────────────────────── */
+    .campaign-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .campaign-stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-5);
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition);
+    }
+
+    .campaign-stat-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .campaign-stat-icon {
+      font-size: 1.5rem;
+      margin-bottom: var(--space-2);
+    }
+
+    .campaign-stat-value {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--black);
+      line-height: 1;
+      margin-bottom: var(--space-1);
+    }
+
+    .campaign-stat-label {
+      font-size: var(--text-xs);
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Section header ─────────────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-4);
+    }
+
+    .section-title {
+      font-family: var(--font-head);
+      font-size: var(--text-md);
+      font-weight: 800;
+      color: var(--black);
+    }
+
+    .section-subtitle {
+      font-size: var(--text-xs);
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── Campaign Card ──────────────────────────────────────────── */
+    .campaign-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      margin-bottom: var(--space-4);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+
+    .campaign-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(124, 58, 237, 0.18);
+    }
+
+    .campaign-card-header {
+      padding: var(--space-5) var(--space-5);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+    }
+
+    .campaign-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--violet-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .campaign-card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .campaign-card-top {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-1);
+    }
+
+    .campaign-card-name {
+      font-family: var(--font-head);
+      font-size: var(--text-md);
+      font-weight: 800;
+      color: var(--black);
+    }
+
+    .campaign-card-msg {
+      font-size: var(--text-xs);
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: var(--space-3);
+      max-width: 560px;
+    }
+
+    .campaign-card-meta {
+      display: flex;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .campaign-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: var(--text-xs);
+      color: var(--muted);
+    }
+
+    .campaign-meta-item strong {
+      color: var(--black);
+      font-weight: 700;
+    }
+
+    .campaign-card-actions {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      flex-shrink: 0;
+      align-items: flex-start;
+    }
+
+    /* ── Progress bar ───────────────────────────────────────────── */
+    .campaign-progress-bar-wrap {
+      padding: 0 var(--space-5) var(--space-3);
+    }
+
+    .campaign-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--text-xs);
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .campaign-progress-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .campaign-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--violet-mid) 0%, var(--violet) 100%);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── Requests table ─────────────────────────────────────────── */
+    .campaign-requests-panel {
+      display: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .campaign-requests-panel.open {
+      display: block;
+    }
+
+    .campaign-requests-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-5);
+      background: var(--off-white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .campaign-requests-header-title {
+      font-size: var(--text-xs);
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .request-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-3) var(--space-5);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+
+    .request-row:last-child { border-bottom: none; }
+    .request-row:hover { background: var(--off-white); }
+    .request-row-info { flex: 1; min-width: 0; }
+
+    .request-row-name {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--black);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .request-row-email {
+      font-size: var(--text-xs);
+      color: var(--muted);
+    }
+
+    .request-row-status { flex-shrink: 0; }
+
+    .request-row-date {
+      font-size: var(--text-xs);
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .request-row-copy { flex-shrink: 0; }
+
+    /* ── Empty state ────────────────────────────────────────────── */
+    .campaigns-empty {
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .campaigns-empty-icon {
+      font-size: 3.5rem;
+      margin-bottom: var(--space-4);
+    }
+
+    .campaigns-empty-title {
+      font-family: var(--font-head);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: var(--space-2);
+    }
+
+    .campaigns-empty-desc {
+      font-size: var(--text-sm);
+      color: var(--muted);
+      max-width: 380px;
+      margin: 0 auto var(--space-5);
+      line-height: 1.6;
+    }
+
+    /* ── Modal section title ────────────────────────────────────── */
+    .modal-section-title {
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: var(--space-3);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Customer list improvements ─────────────────────────────── */
+    .customer-list-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-2);
+    }
+
+    .customer-count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--violet-light);
+      color: var(--violet);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 99px;
+      transition: background 0.2s;
+    }
+
+    .customer-count-badge.has-errors {
+      background: #FEF2F2;
+      color: #EF4444;
+    }
+
+    .customer-validation-list {
+      margin-top: var(--space-2);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+
+    .customer-validation-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 2px 0;
+    }
+
+    .customer-validation-item.valid { color: #16a34a; }
+    .customer-validation-item.invalid { color: #dc2626; }
+
+    .customer-format-hint {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--text-xs);
+      color: var(--muted);
+      margin-top: var(--space-2);
+      line-height: 1.6;
+    }
+
+    .customer-format-hint code {
+      font-family: monospace;
+      background: var(--border);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--black);
+    }
+
+    /* ── Campaign modal — fixed header+footer, scrollable body ── */
+    #modal-create-campaign {
+      align-items: center;
+      justify-content: center;
+      padding: 20px;              /* breathing room from viewport edges */
+    }
+
+    #modal-create-campaign .modal-box {
+      display: flex;
+      flex-direction: column;
+      height: min(92vh, 680px);  /* cap height so footer is always visible */
+      max-height: 92vh;
+      overflow: hidden;           /* box does NOT scroll — children do */
+      padding: 0;
+    }
+
+    /* Fixed header — never scrolls away */
+    #modal-create-campaign .modal-header {
+      flex-shrink: 0;
+      padding: 20px 28px 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+
+    /* THE KEY FIX: form must be a flex column so its children fill correctly */
+    #modal-create-campaign form {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;              /* allows flex child to shrink below content size */
+      overflow: hidden;
+    }
+
+    /* Scrollable body — this is the ONLY thing that scrolls */
+    #modal-create-campaign .modal-form-body {
+      flex: 1;
+      min-height: 0;              /* essential: without this, won't shrink */
+      overflow-y: auto;
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Fixed footer — always pinned at the bottom */
+    #modal-create-campaign .modal-footer {
+      flex-shrink: 0;
+      padding: 14px 28px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      background: var(--white);
+    }
+
+    #modal-create-campaign .modal-form-body textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* ── TrustFrame two-tone brand name ───────────────────────── */
+    .brand-trust { color: #FFFFFF; }
+    .brand-frame  { color: #a78bfa; } /* soft purple accent */
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .campaign-card-header { flex-direction: column; }
+      .campaign-card-actions { flex-direction: row; }
+      #modal-create-campaign .modal-box { max-height: 95vh; }
+      #modal-create-campaign .modal-header { padding: var(--space-5) var(--space-5) var(--space-4); }
+      #modal-create-campaign .modal-form-body { padding: var(--space-4) var(--space-5); }
+      #modal-create-campaign .modal-footer { padding: var(--space-4) var(--space-5); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar" role="navigation">
+      <div class="sidebar-logo">
+        <img src="/images/logo.png" alt="TrustFrame" style="width:34px;height:34px;object-fit:contain;border-radius:8px;">
+        <span class="sidebar-logo-name">
+          <span class="brand-trust">Trust</span><span class="brand-frame">Frame</span>
+        </span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</a>
+        <a href="/spaces.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Spaces</a>
+        <a href="/testimonials.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Testimonials</a>
+        <a href="/analytics.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics</a>
+        <a href="/campaigns.html" class="nav-link active" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Campaigns</a>
+        <a href="/embed.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Embed</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user"><div id="sidebar-avatar" class="avatar avatar-sm">…</div><div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">…</div><div class="sidebar-user-email" id="sidebar-user-email"></div></div></div>
+        <button id="btn-logout" class="btn btn-ghost btn-sm w-full mt-2" style="justify-content:flex-start;color:var(--muted)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <div class="main-content">
+      <header class="mobile-header">
+        <button id="hamburger" class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+        <span style="font-family:var(--font-head);font-weight:800;font-size:1rem">
+          <span style="color:#FFFFFF">Trust</span><span style="color:#a78bfa">Frame</span>
+        </span>
+        <div style="width:36px"></div>
+      </header>
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Campaigns</h1>
+          <p class="text-sm text-muted mt-1">Request reviews via email and track responses in one place.</p>
+        </div>
+        <div class="campaigns-header-actions">
+          <label for="space-select" class="text-xs text-muted" style="font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Space:</label>
+          <select id="space-select" class="input hidden" style="width:auto;min-width:170px;padding:0.45rem 2.2rem 0.45rem 0.85rem;font-size:0.875rem"></select>
+          <button id="btn-new-campaign" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Campaign
+          </button>
+        </div>
+      </div>
+
+      <!-- No spaces state -->
+      <div id="no-spaces-state" class="empty-state hidden" style="padding:4rem 2rem">
+        <div class="empty-icon">📁</div>
+        <div class="empty-title">No spaces found</div>
+        <div class="empty-desc">Create a Space first, then run campaigns to collect reviews.</div>
+        <a href="/spaces.html" class="btn btn-primary mt-4">+ Create Space</a>
+      </div>
+
+      <main class="page-body" id="campaigns-main">
+
+        <!-- Stats row -->
+        <div class="campaign-stats-grid">
+          <div class="campaign-stat-card">
+            <div class="campaign-stat-icon">📣</div>
+            <div class="campaign-stat-value" id="stat-campaigns">0</div>
+            <div class="campaign-stat-label">Campaigns</div>
+          </div>
+          <div class="campaign-stat-card">
+            <div class="campaign-stat-icon">📤</div>
+            <div class="campaign-stat-value" id="stat-sent">0</div>
+            <div class="campaign-stat-label">Emails Sent</div>
+          </div>
+          <div class="campaign-stat-card">
+            <div class="campaign-stat-icon">👁️</div>
+            <div class="campaign-stat-value" id="stat-opened">0</div>
+            <div class="campaign-stat-label">Opened</div>
+          </div>
+          <div class="campaign-stat-card">
+            <div class="campaign-stat-icon">⭐</div>
+            <div class="campaign-stat-value" id="stat-received">0</div>
+            <div class="campaign-stat-label">Reviews In</div>
+          </div>
+          <div class="campaign-stat-card">
+            <div class="campaign-stat-icon">📈</div>
+            <div class="campaign-stat-value" id="stat-conversion">—</div>
+            <div class="campaign-stat-label">Conversion</div>
+          </div>
+        </div>
+
+        <!-- Campaign list section -->
+        <div class="section-header">
+          <div>
+            <div class="section-title">Your Campaigns</div>
+            <div class="section-subtitle">Click a campaign to view and manage customer requests</div>
+          </div>
+        </div>
+
+        <div id="campaigns-list">
+          <!-- Initial skeletons -->
+          <div class="campaign-card" style="padding:var(--space-5)">
+            <div style="display:flex;gap:var(--space-4)">
+              <div class="skeleton" style="width:44px;height:44px;border-radius:var(--radius-md);flex-shrink:0"></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+                <div class="skeleton skeleton-text" style="width:30%"></div>
+                <div class="skeleton skeleton-text" style="width:70%"></div>
+                <div class="skeleton skeleton-text" style="width:45%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="campaign-card" style="padding:var(--space-5)">
+            <div style="display:flex;gap:var(--space-4)">
+              <div class="skeleton" style="width:44px;height:44px;border-radius:var(--radius-md);flex-shrink:0"></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+                <div class="skeleton skeleton-text" style="width:40%"></div>
+                <div class="skeleton skeleton-text" style="width:60%"></div>
+                <div class="skeleton skeleton-text" style="width:35%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ── Create Campaign Modal ─────────────────────────────── -->
+  <div id="modal-create-campaign" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-campaign-title">
+    <div class="modal-box" style="max-width:600px;width:100%">
+
+      <!-- Fixed header -->
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-campaign-title">New Campaign</h3>
+          <p style="font-size:var(--text-xs);color:var(--muted);margin-top:2px">Send personalised review request emails to your customers</p>
+        </div>
+        <button id="btn-close-campaign-modal" class="btn btn-ghost btn-sm" aria-label="Close">✕</button>
+      </div>
+
+      <!-- Scrollable form body -->
+      <form id="form-create-campaign">
+        <div class="modal-form-body">
+
+          <div class="modal-section-title">Campaign Details</div>
+
+          <div class="form-group">
+            <label class="form-label" for="campaign-name">Campaign Name <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="campaign-name" class="input" placeholder="e.g. Post-purchase follow-up, Q4 outreach" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="campaign-message">Custom Message <span class="text-muted" style="font-weight:400">(optional)</span></label>
+            <textarea id="campaign-message" class="input" rows="2" placeholder="Hi {name}! We'd love to hear your feedback on your recent experience with us…" style="resize:vertical;max-height:120px"></textarea>
+            <span class="form-hint">Leave blank to use the default message. Use {name} to personalise.</span>
+          </div>
+
+          <div class="modal-section-title" style="margin-top:var(--space-2)">Customer List</div>
+
+          <div class="form-group">
+            <div class="customer-list-meta">
+              <label class="form-label" for="campaign-customers" style="margin-bottom:0">
+                Customers <span class="text-muted" style="font-weight:400">(one per line)</span>
+              </label>
+              <span id="customer-count-badge" class="customer-count-badge" style="display:none">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <span id="customer-count-text">0 valid</span>
+              </span>
+            </div>
+            <textarea id="campaign-customers" class="input" rows="4"
+              placeholder="Jane Smith, jane@example.com&#10;John Doe, john@example.com&#10;Alice Johnson, alice@acme.com"
+              style="font-family:monospace;font-size:13px;line-height:1.7;resize:vertical;max-height:180px"></textarea>
+            <div class="customer-format-hint">
+              <strong>Format:</strong> <code>Full Name, email@address.com</code> — one customer per line.<br>
+              Lines with invalid or missing email will be highlighted and skipped.
+            </div>
+            <!-- Live validation feedback -->
+            <div id="customer-validation-list" class="customer-validation-list" style="display:none"></div>
+          </div>
+
+        </div>
+
+        <!-- Fixed footer with action buttons -->
+        <div class="modal-footer">
+          <button type="button" id="btn-cancel-campaign" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span class="btn-text">Create &amp; Send</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+  <script type="module" src="js/campaigns.js"></script>
+  <script>
+    // ── Customer list live validation ──────────────────────────────
+    const custArea  = document.getElementById('campaign-customers');
+    const countBadge = document.getElementById('customer-count-badge');
+    const countText  = document.getElementById('customer-count-text');
+    const valList    = document.getElementById('customer-validation-list');
+    const emailRe    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function validateCustomers() {
+      const raw = custArea.value.trim();
+      if (!raw) {
+        countBadge.style.display = 'none';
+        valList.style.display = 'none';
+        valList.innerHTML = '';
+        return;
+      }
+
+      const lines = raw.split('\n').filter(l => l.trim());
+      let valid = 0, errors = [];
+
+      lines.forEach((line, i) => {
+        const parts = line.split(',');
+        const email = (parts.pop() || '').trim();
+        const name  = parts.join(',').trim() || '(no name)';
+        if (emailRe.test(email)) {
+          valid++;
+        } else {
+          errors.push({ line: i + 1, raw: line.trim(), email });
+        }
+      });
+
+      const total = lines.length;
+      countBadge.style.display = 'inline-flex';
+      countText.textContent = `${valid} valid${errors.length > 0 ? ` · ${errors.length} error${errors.length > 1 ? 's' : ''}` : ''}`;
+      countBadge.className = 'customer-count-badge' + (errors.length > 0 ? ' has-errors' : '');
+
+      if (errors.length > 0) {
+        valList.style.display = 'flex';
+        valList.innerHTML = errors.map(e =>
+          `<div class="customer-validation-item invalid">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Line ${e.line}: <em>${e.raw.length > 40 ? e.raw.slice(0, 40) + '…' : e.raw}</em> — bad email
+          </div>`
+        ).join('');
+      } else {
+        valList.style.display = 'none';
+        valList.innerHTML = '';
+      }
+    }
+
+    custArea?.addEventListener('input', validateCustomers);
+
+    // ── Sidebar / hamburger ────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const sidebar   = document.getElementById('sidebar');
+    const overlay   = document.getElementById('sidebar-overlay');
+    hamburger?.addEventListener('click', () => { sidebar?.classList.toggle('open'); overlay?.classList.toggle('open'); });
+    overlay?.addEventListener('click', () => { sidebar?.classList.remove('open'); overlay?.classList.remove('open'); });
+    document.getElementById('btn-logout')?.addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method:'POST', credentials:'include' });
+      window.location.href = '/login.html';
+    });
+  </script>
+</body>
+</html>

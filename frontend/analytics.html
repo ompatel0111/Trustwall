@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics — TrustFrame</title>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar" role="navigation">
+      <div class="sidebar-logo">
+        <img src="/images/logo.png" alt="TrustFrame" style="width:34px;height:34px;object-fit:contain;border-radius:8px;">
+        <span class="sidebar-logo-name"><span class="brand-trust">Trust</span><span class="brand-frame">Frame</span></span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</a>
+        <a href="/spaces.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Spaces</a>
+        <a href="/testimonials.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Testimonials</a>
+        <a href="/analytics.html" class="nav-link active" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics</a>
+        <a href="/campaigns.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Campaigns</a>
+        <a href="/embed.html" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Embed</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user"><div id="sidebar-avatar" class="avatar avatar-sm">…</div><div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">…</div><div class="sidebar-user-email" id="sidebar-user-email"></div></div></div>
+        <button id="btn-logout" class="btn btn-ghost btn-sm w-full mt-2" style="justify-content:flex-start;color:var(--muted)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <div class="main-content">
+      <header class="mobile-header">
+        <button id="hamburger" class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+        <span style="font-family:var(--font-head);font-weight:800;font-size:1rem"><span style="color:#FFFFFF">Trust</span><span style="color:#a78bfa">Frame</span></span>
+        <div style="width:36px"></div>
+      </header>
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Analytics</h1>
+          <p class="text-sm text-muted mt-2" id="space-name">Loading space…</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px">
+            <label for="space-select" class="text-xs text-muted" style="font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Space:</label>
+            <select id="space-select" class="input hidden" style="width:auto;min-width:180px;padding:0.45rem 2.2rem 0.45rem 0.85rem;font-size:0.875rem" aria-label="Select space"></select>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-sm date-filter-btn" data-days="7">7d</button>
+            <button class="btn btn-sm date-filter-btn" data-days="30">30d</button>
+            <button class="btn btn-sm date-filter-btn active" data-days="90">90d</button>
+            <button class="btn btn-sm date-filter-btn" data-days="365">1yr</button>
+            <button class="btn btn-sm date-filter-btn" data-days="all">All</button>
+          </div>
+          <button id="btn-export-csv" class="btn btn-sm btn-secondary">⬇ Export CSV</button>
+        </div>
+      </div>
+
+      <div id="no-spaces-state" class="empty-state hidden" style="padding:4rem 2rem">
+        <div class="empty-icon">📁</div>
+        <div class="empty-title">No spaces found</div>
+        <div class="empty-desc">You need at least one Space before viewing analytics.</div>
+        <a href="/create-space.html" class="btn btn-primary mt-4">+ Create Space</a>
+      </div>
+
+      <main class="page-body" id="analytics-main">
+        <!-- Summary stat cards -->
+        <div class="stats-grid mb-8" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));max-width:100%">
+          <div class="stat-card">
+            <div class="stat-label">Average Rating</div>
+            <div class="stat-value" id="stat-avg">—</div>
+            <div id="stat-avg-stars" class="mt-2"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Approved Reviews</div>
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-sub">published to wall</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value" id="stat-pending">0</div>
+            <div class="stat-sub">awaiting moderation</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Recommendation Rate</div>
+            <div class="stat-value" id="stat-recommend">—</div>
+            <div class="stat-sub">rated 4 or 5 stars</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">5-Star Share</div>
+            <div class="stat-value" id="stat-five-star">—</div>
+            <div class="stat-sub">perfect scores</div>
+          </div>
+        </div>
+
+        <!-- Charts grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);margin-bottom:var(--space-6)">
+          <!-- Reviews over time -->
+          <div class="card">
+            <h2 style="font-family:var(--font-head);font-size:var(--text-md);font-weight:700;color:var(--black);margin-bottom:var(--space-1)">Reviews Over Time</h2>
+            <p class="text-xs text-muted mb-4">Monthly review count</p>
+            <div style="position:relative;height:200px">
+              <canvas id="chart-reviews-time"></canvas>
+            </div>
+          </div>
+          <!-- Avg rating over time -->
+          <div class="card">
+            <h2 style="font-family:var(--font-head);font-size:var(--text-md);font-weight:700;color:var(--black);margin-bottom:var(--space-1)">Avg Rating Over Time</h2>
+            <p class="text-xs text-muted mb-4">Monthly average star rating</p>
+            <div style="position:relative;height:200px">
+              <canvas id="chart-avg-time"></canvas>
+            </div>
+          </div>
+          <!-- Rating distribution doughnut -->
+          <div class="card">
+            <h2 style="font-family:var(--font-head);font-size:var(--text-md);font-weight:700;color:var(--black);margin-bottom:var(--space-1)">Rating Distribution</h2>
+            <p class="text-xs text-muted mb-4">Share of each star rating</p>
+            <div style="position:relative;height:200px">
+              <canvas id="chart-dist"></canvas>
+            </div>
+          </div>
+          <!-- Reviews by tag -->
+          <div class="card">
+            <h2 style="font-family:var(--font-head);font-size:var(--text-md);font-weight:700;color:var(--black);margin-bottom:var(--space-1)">Reviews by Tag</h2>
+            <p class="text-xs text-muted mb-4">Top 10 tags (approved reviews)</p>
+            <div style="position:relative;height:200px">
+              <canvas id="chart-tags"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating distribution bars -->
+        <div class="card" style="max-width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6)">
+            <div>
+              <h2 style="font-family:var(--font-head);font-size:var(--text-lg);font-weight:700;color:var(--black)">Detailed Rating Breakdown</h2>
+              <p class="text-xs text-muted mt-1">Count and percentage for each star level</p>
+            </div>
+            <span id="stat-rated-count" class="badge badge-default">0 ratings</span>
+          </div>
+          <div id="rating-bars">
+            <div class="skeleton skeleton-text mb-4" style="height:16px"></div>
+            <div class="skeleton skeleton-text mb-4" style="height:16px;width:85%"></div>
+            <div class="skeleton skeleton-text mb-4" style="height:16px;width:60%"></div>
+            <div class="skeleton skeleton-text mb-4" style="height:16px;width:40%"></div>
+            <div class="skeleton skeleton-text mb-4" style="height:16px;width:20%"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+  <script type="module" src="js/analytics.js"></script>
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    hamburger?.addEventListener('click', () => { sidebar?.classList.toggle('open'); overlay?.classList.toggle('open'); });
+    overlay?.addEventListener('click', () => { sidebar?.classList.remove('open'); overlay?.classList.remove('open'); });
+    document.getElementById('btn-logout')?.addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method:'POST', credentials:'include' });
+      window.location.href = '/login.html';
+    });
+  </script>
+</body>
+</html>
