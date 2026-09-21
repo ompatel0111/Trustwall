@@ -1,262 +1,239 @@
-# Proofly — Testimonial & Social Proof Collection Platform
+# TrustFrame — Testimonial & Social Proof Platform
 
-A premium SaaS application for collecting, moderating and showcasing customer testimonials.
+> **Collect testimonials. Showcase trust. Grow with proof.**  
+> A full-stack SaaS platform designed to collect, curate, moderate, and showcase authentic customer reviews and social proof without any technical barrier.
 
 ---
 
-## Tech Stack
+## 🚀 Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Frontend | HTML5 + CSS3 + Vanilla JavaScript (ES Modules) |
-| Backend | Python + Flask |
-| Database | MongoDB (PyMongo) |
-| Auth | JWT (httpOnly cookies) + bcrypt |
+| **Frontend** | HTML5, Modern CSS3 (Variables & Animations), Vanilla JavaScript (ES Modules), Chart.js |
+| **Backend** | Python 3.11+, Flask REST API, Flask-JWT-Extended, Flask-Limiter, Flask-CORS |
+| **Database** | MongoDB with PyMongo |
+| **Authentication** | JWT stored in secure `httpOnly` cookies with refresh token rotation & bcrypt hashing |
+| **Email Service** | SMTP (Gmail App Password support) with branded HTML templates and dev-mode fallback |
 
 ---
 
-## Features
+## ✨ Features
 
-- Create branded testimonial collection **Spaces**
-- Public collection form — no customer login required
-- Star rating selector (1–5)
-- Moderation inbox (approve / reject / archive / feature)
-- **Wall of Love** — public masonry page of approved testimonials
-- Embed generator — iframe widget (Grid / Carousel / Badge)
-- Analytics — avg rating & rating distribution
-- JWT auth with refresh token rotation
-- Password reset flow (dev mode: token returned in API response)
+- **Branded Collection Spaces** — Create and configure spaces with custom headers, prompts, tags, and theme accents.
+- **Public Review Collection** — Shareable collection link with zero sign-in friction for end users. Supports 1–5 star ratings, avatar/name/title inputs, and optional photo uploads.
+- **Moderation Inbox** — Comprehensive dashboard inbox to approve, reject, archive, feature, or like submitted testimonials.
+- **Wall of Love** — Public, responsive masonry wall showcasing approved testimonials with dynamic average rating and review counts.
+- **Embed Generator** — Embed widgets directly into any website (Grid, Carousel, Masonry, Badge) with copy-paste HTML iframe code and live preview.
+- **Email Review Campaigns** — Launch personalized email campaigns to request testimonials directly from customers with tracking.
+- **Analytics & Insights** — Visual breakdown of average ratings, rating distribution, and submission trends with Chart.js.
+- **Space Customization & Team Settings** — Fine-tune wall titles, custom form fields, thank-you messages, webhook notifications, and invite team members with roles.
+- **Secure Authentication** — Email verification, JWT authentication with auto-refreshing sessions, and password recovery.
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 proofly/
-├── app.py              # Flask application factory
-├── config.py           # All configuration
-├── database.py         # MongoDB connection
-├── requirements.txt
-├── .env.example
+├── app.py                     # Flask application entry point & blueprint registration
+├── config.py                  # Environment and application configuration
+├── database.py                # MongoDB connection and collection initialization
+├── requirements.txt           # Python dependencies
+├── .env.example               # Example environment variables
 │
-├── models/
-│   ├── user_model.py
-│   ├── space_model.py
-│   ├── testimonial_model.py
-│   └── token_model.py
+├── models/                    # Data models & validation schemas
+│   ├── user_model.py          # User accounts, auth & verification
+│   ├── space_model.py         # Space settings, form config & wall options
+│   ├── testimonial_model.py   # Testimonials, ratings & moderation states
+│   ├── campaign_model.py      # Email collection campaigns & recipient tracking
+│   ├── team_model.py          # Team members & permissions
+│   └── token_model.py         # Refresh token storage for rotation
 │
-├── routes/
-│   ├── auth_routes.py
-│   ├── user_routes.py
-│   ├── space_routes.py
-│   ├── testimonial_routes.py
-│   ├── public_routes.py
-│   └── analytics_routes.py
+├── routes/                    # API endpoints
+│   ├── auth_routes.py         # Signup, login, verification, refresh, logout, password reset
+│   ├── user_routes.py         # Profile & account management
+│   ├── space_routes.py        # Space CRUD & settings
+│   ├── testimonial_routes.py  # Moderation actions (approve, reject, feature, etc.)
+│   ├── campaign_routes.py     # Campaign creation, sending & metrics
+│   ├── public_routes.py       # Public collection, wall data & embed payloads
+│   └── analytics_routes.py    # Rating stats & chart data
 │
-├── utils/
-│   ├── validation.py
-│   └── helpers.py
+├── utils/                     # Utility services & helpers
+│   ├── email_service.py       # SMTP email sender & responsive HTML templates
+│   ├── validation.py          # Input sanitization and validators
+│   └── helpers.py             # Response wrappers & slug generators
 │
-├── middleware/
-│   └── auth_middleware.py
+├── middleware/                # Security & request filters
+│   └── auth_middleware.py     # JWT extraction & role validation
 │
-└── frontend/
-    ├── index.html          # Landing page
-    ├── login.html
-    ├── signup.html
-    ├── forgot-password.html
-    ├── reset-password.html
-    ├── dashboard.html
-    ├── spaces.html
-    ├── testimonials.html
-    ├── analytics.html
-    ├── embed.html
-    ├── collect.html        # Public — no login
-    ├── wall.html           # Public — no login
-    ├── embed-view.html     # Iframe embed target
+└── frontend/                  # Web interface
+    ├── index.html             # Landing page
+    ├── login.html             # User login
+    ├── signup.html            # Account registration
+    ├── verify-email.html      # Email token verification
+    ├── forgot-password.html   # Password reset request
+    ├── reset-password.html    # Password update
+    ├── dashboard.html         # Overview dashboard
+    ├── spaces.html            # Space management
+    ├── create-space.html      # Space creation wizard
+    ├── space-settings.html    # Space configuration, team & wall settings
+    ├── testimonials.html      # Moderation inbox & review list
+    ├── analytics.html         # Analytics dashboard with Chart.js
+    ├── campaigns.html         # Email campaign manager
+    ├── embed.html             # Embed generator & preview tool
+    ├── collect.html           # Public review submission page
+    ├── wall.html              # Public Wall of Love page
+    ├── embed-view.html        # Lightweight iframe widget target
+    │
+    ├── images/
+    │   └── logo.png           # TrustFrame 3D Shield mark
     │
     ├── css/
-    │   ├── main.css        # Design system + all components
-    │   ├── auth.css
-    │   ├── dashboard.css
-    │   ├── collection.css
-    │   └── wall.css
+    │   ├── main.css           # Global typography, colors & UI components
+    │   ├── auth.css           # Authentication layout & card styles
+    │   ├── dashboard.css      # Sidebar, topbar, grid cards & controls
+    │   ├── collection.css     # Public collection form theme
+    │   └── wall.css           # Masonry grid & Wall of Love theme
     │
     └── js/
-        ├── api.js          # Centralized fetch + auto-refresh
-        ├── auth.js
-        ├── dashboard.js
-        ├── spaces.js
-        ├── testimonials.js
-        ├── analytics.js
-        ├── collection.js
-        ├── wall.js
-        ├── embed.js
-        └── utils.js
+        ├── api.js             # Fetch client with auto token refresh & error handling
+        ├── auth.js            # Auth forms & session management
+        ├── dashboard.js       # Dashboard overview metrics & activity
+        ├── spaces.js          # Space listing & quick actions
+        ├── space-settings.js  # Space settings, wall config & team management
+        ├── testimonials.js    # Moderation inbox logic & batch filters
+        ├── analytics.js       # Chart.js rendering & metric computations
+        ├── campaigns.js       # Campaign wizard & tracking
+        ├── embed.js           # Widget builder & snippet generator
+        ├── collection.js      # Interactive submission form logic
+        ├── wall.js            # Public masonry loader & statistics
+        └── utils.js           # Toast alerts, date formatting & clipboard helpers
 ```
 
 ---
 
-## Installation
+## 🛠️ Installation & Setup
 
 ### 1. Prerequisites
+- **Python 3.11+** installed
+- **MongoDB** running locally (`mongodb://localhost:27017`) or a MongoDB Atlas URI
 
-- Python 3.11+
-- MongoDB running locally (`mongod`)
+### 2. Environment Configuration
+Create a `.env` file in the `proofly/` directory (or copy from `.env.example`):
 
-### 2. Setup
+```env
+# Flask Settings
+SECRET_KEY=your-super-secret-key-change-in-production
+FLASK_DEBUG=True
 
+# MongoDB Connection
+MONGO_URI=mongodb://localhost:27017/proofly
+
+# JWT Authentication
+JWT_SECRET_KEY=jwt-secret-key-change-in-production
+JWT_REFRESH_SECRET_KEY=jwt-refresh-secret-key-change-in-production
+
+# App URLs
+FRONTEND_URL=http://localhost:5000
+APP_BASE_URL=http://localhost:5000
+
+# Email Service (SMTP)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-google-app-password
+SMTP_FROM=TrustFrame <your-email@gmail.com>
+```
+
+### 3. Install Dependencies
 ```bash
 cd proofly
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Copy environment file
-copy .env.example .env
 ```
 
-### 3. Environment variables (`.env`)
-
-```
-MONGO_URI=mongodb://localhost:27017/proofly
-JWT_SECRET_KEY=change-this-in-production
-JWT_REFRESH_SECRET_KEY=change-this-too
-SECRET_KEY=flask-secret
-FRONTEND_URL=http://127.0.0.1:5500
-```
-
-### 4. Start MongoDB
-
-Make sure MongoDB is running:
-```bash
-mongod
-```
-
-### 5. Start Flask
-
+### 4. Start the Application
 ```bash
 python app.py
 ```
+Flask will start at `http://localhost:5000`.
 
-Flask runs at: `http://localhost:5000`
-
-### 6. Open Frontend
-
-Open `frontend/index.html` using a Live Server (VS Code → Go Live, or any static file server on port 5500).
-
-Or just open the HTML files directly from the `frontend/` directory.
+Open your browser and navigate to:
+- **Landing Page**: `http://localhost:5000/`
+- **Dashboard**: `http://localhost:5000/dashboard.html`
+- **Login**: `http://localhost:5000/login.html`
 
 ---
 
-## API Endpoints
+## 🔌 API Reference
 
-### Auth
+### 🔐 Authentication (`/api/auth`)
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | /api/auth/signup | Create account |
-| POST | /api/auth/login | Login, receive JWT cookies |
-| POST | /api/auth/refresh | Rotate refresh token |
-| POST | /api/auth/logout | Revoke token, clear cookies |
-| POST | /api/auth/forgot-password | Get reset token (returned in dev) |
-| POST | /api/auth/reset-password | Set new password |
+| `POST` | `/api/auth/signup` | Register new account and send verification email |
+| `POST` | `/api/auth/login` | Authenticate user & issue JWT `httpOnly` cookies |
+| `GET` | `/api/auth/verify-email?token=...` | Verify email address token |
+| `POST` | `/api/auth/resend-verification` | Resend verification email |
+| `POST` | `/api/auth/refresh` | Rotate refresh token & issue new access token |
+| `POST` | `/api/auth/logout` | Revoke active session & clear cookies |
+| `POST` | `/api/auth/forgot-password` | Request password reset token |
+| `POST` | `/api/auth/reset-password` | Set new password with reset token |
 
-### Spaces (auth required)
+### 🏢 Spaces (`/api/spaces`)
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | /api/spaces | Create space |
-| GET | /api/spaces | List my spaces |
-| GET | /api/spaces/:id | Get space |
-| PUT | /api/spaces/:id | Update space |
-| DELETE | /api/spaces/:id | Delete space + testimonials |
+| `GET` | `/api/spaces` | List all spaces owned by or shared with current user |
+| `POST` | `/api/spaces` | Create a new space |
+| `GET` | `/api/spaces/:id` | Get space configuration and details |
+| `PUT` | `/api/spaces/:id` | Update space settings, wall design, and notifications |
+| `DELETE` | `/api/spaces/:id` | Delete space and its associated testimonials |
+| `POST` | `/api/spaces/:id/team` | Invite a team member |
+| `DELETE` | `/api/spaces/:id/team/:userId` | Remove a team member |
 
-### Testimonials (auth required)
+### 💬 Testimonials (`/api/testimonials`)
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | /api/testimonials?space_id=... | List with filters |
-| POST | /api/testimonials/:id/approve | Approve |
-| POST | /api/testimonials/:id/reject | Reject |
-| POST | /api/testimonials/:id/archive | Archive |
-| POST | /api/testimonials/:id/feature | Toggle featured |
-| POST | /api/testimonials/:id/like | Toggle liked |
+| `GET` | `/api/testimonials?space_id=...` | List testimonials with status/rating/search filters |
+| `POST` | `/api/testimonials/:id/approve` | Approve a testimonial |
+| `POST` | `/api/testimonials/:id/reject` | Reject a testimonial |
+| `POST` | `/api/testimonials/:id/archive` | Archive a testimonial |
+| `POST` | `/api/testimonials/:id/feature` | Toggle featured status |
+| `POST` | `/api/testimonials/:id/like` | Toggle liked status |
+| `DELETE` | `/api/testimonials/:id` | Permanently delete a testimonial |
 
-### Public (no auth)
+### ✉️ Campaigns (`/api/campaigns`)
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | /api/public/spaces/:slug | Space info |
-| POST | /api/public/spaces/:slug/testimonials | Submit review |
-| GET | /api/public/spaces/:slug/testimonials | Approved reviews |
-| GET | /api/public/embed/:slug | Embed data |
+| `GET` | `/api/campaigns?space_id=...` | List campaigns for a space |
+| `POST` | `/api/campaigns` | Create and send email collection campaign |
+| `GET` | `/api/campaigns/:id` | Get campaign statistics and delivery status |
 
-### Analytics (auth required)
+### 📊 Analytics (`/api/analytics`)
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | /api/spaces/:id/analytics | Rating stats |
+| `GET` | `/api/spaces/:id/analytics` | Summary metrics, rating distributions & timeline stats |
+
+### 🌐 Public Endpoints (`/api/public` — No Auth Required)
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/public/spaces/:slug` | Retrieve space details for collection page |
+| `POST` | `/api/public/spaces/:slug/testimonials` | Submit a customer testimonial |
+| `GET` | `/api/public/spaces/:slug/wall` | Retrieve approved testimonials for Wall of Love |
+| `GET` | `/api/public/embed/:slug` | Retrieve widget data for iframe embed |
 
 ---
 
-## Authentication Flow
+## 🎨 Design System
 
-```
-Signup → Login
-         ↓
-    Access Token (15 min, httpOnly cookie)
-    Refresh Token (7 days, httpOnly cookie, hashed in DB)
-         ↓
-    Protected API call
-         ↓
-    Token expired? → POST /api/auth/refresh
-         ↓
-    Old refresh token revoked
-    New access + refresh tokens issued (rotation)
-         ↓
-    Logout → Refresh token revoked, cookies cleared
-```
+TrustFrame uses a refined modern liquid violet theme:
+
+- **Primary Violet**: `#7C3AED` (Main brand & accents)
+- **Deep Violet**: `#5B21B6` / `#3B0764` (Sidebar & gradients)
+- **Light Violet Accent**: `#A78BFA` / `#C4B5FD`
+- **Dark Surface**: `#120B1E` / `#1E1030`
+- **Typography**: `Plus Jakarta Sans` / `Manrope` (Headings) + `Inter` (Body)
 
 ---
 
-## How to Test
+## 📄 License
 
-### Password Reset (dev mode)
-
-1. Go to `forgot-password.html`
-2. Enter your email
-3. The reset token is returned **in the API response** (shown in the form)
-4. Copy the token
-5. Go to `reset-password.html`
-6. Paste the token and set a new password
-
-### Creating a Space
-
-1. Login → Dashboard → Spaces
-2. Click "New Space"
-3. Fill in name (slug auto-generated)
-4. Create
-
-### Collecting Testimonials
-
-1. From Spaces page, click "Copy Link" on a space
-2. Open the link in an **incognito window** (or a different browser)
-3. The collection form appears — no login needed
-4. Submit a review
-
-### Moderating
-
-1. Go to Testimonials page
-2. Select your space from URL (`?space=SPACE_ID`)
-3. Approve pending testimonials
-
-### Wall of Love
-
-Open: `wall.html?space=YOUR-SLUG`
-
----
-
-## Design System
-
-Colors follow the **60 / 30 / 10 rule**:
-- **60%** White / Off-white (`#FFFFFF`, `#FAF9F7`) — backgrounds
-- **30%** Black / Charcoal (`#111111`, `#252525`) — text, navigation
-- **10%** Berry Jam (`#6B1D49`) — CTA buttons, active states, accents only
-
-Fonts: **Manrope** (headings) + **Inter** (body) via Google Fonts.
+This project is licensed under the MIT License.
